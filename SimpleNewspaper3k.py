@@ -47,4 +47,5 @@ for url in articles:
     subjectivities.append(subjectivity)
     #print("Summary: ", summary)
     
-
+print("Average Polarity: ", sum(poliarities)/len(poliarities))
+print("Average Subjectivity: ", sum(subjectivities)/len(subjectivities))

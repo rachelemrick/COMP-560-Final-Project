@@ -5,7 +5,7 @@ from textblob import TextBlob
 import nltk
 nltk.download('punkt')
 
-feed = 'https://abcnews.go.com/abcnews/technologyheadlines'
+feed = 'https://abcnews.go.com/abcnews/politicsheadlines'
 response = requests.get(feed)
 
 webpage = response.content
@@ -17,6 +17,10 @@ articles = []
 for item in items:
     link = item.find('link').text
     articles.append(link)
+
+print("Number of articles: ", len(articles))
+poliarities = []
+subjectivities = []
 
 for url in articles:
     article = Article(url)
@@ -39,6 +43,8 @@ for url in articles:
     print("publish date: ", publish_date)
     print("Keywords: ", keywords)
     print(f"Sentiment: {sentiment}")
+    poliarities.append(poliarity)
+    subjectivities.append(subjectivity)
     #print("Summary: ", summary)
     
 

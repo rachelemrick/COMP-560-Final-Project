@@ -1,0 +1,1 @@
+{"status":"error","error_code":"WrongInput","message":"Do not use any subdirectory when filling in [sources] parameter. In our case, you must fill in [sources] parameter with => bbc.com"}

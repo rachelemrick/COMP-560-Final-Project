@@ -1,0 +1,1 @@
+{"status":"error","error_code":"ConcurrencyViolation","message":"Max concurrency allowed 1 per 1 seconds"}

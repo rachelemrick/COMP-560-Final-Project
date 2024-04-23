@@ -1,5 +1,98 @@
 {
-    "status": "error",
-    "error_code": "WrongInput",
-    "message": "Do not use any subdirectory when filling in [sources] parameter. In our case, you must fill in [sources] parameter with => bbc.com"
+    "status": "ok",
+    "total_hits": 3,
+    "page": 1,
+    "total_pages": 1,
+    "page_size": 3,
+    "articles": [
+        {
+            "title": "Nadeem Anjarwalla: Who be Binance executive wey escape from Nigerian wey dem see for Kenya",
+            "author": "",
+            "published_date": "2024-04-22 11:21:04",
+            "published_date_precision": "full",
+            "link": "https://www.bbc.com/pidgin/articles/c97zq8x6wzpo",
+            "clean_url": "bbc.com",
+            "excerpt": "Tori be say Oga Anjarwalla bin run comot Nigeria afta e escape from lawful custody for March.",
+            "summary": "Who be Binance executive Nadeem Anjarwalla wey dem see for Kenya\nWho be Binance executive Nadeem Anjarwalla wey dem see for Kenya\nWia dis foto come from, Nadeem Anjarwalla/Facebook\n22 April 2024, 12:21 WAT New Informate 2 minutes wey don pass\nNew Informate 2 minutes wey don pass\nNigeria news media dey report say Kenya Police Service don arrest di executive of di Trading Cryptocurrency firm Binance, wey escape from custody for Nigeria for March.\nDi report say Nigerian goment dey work wit Kenyan authorities to deport Nadeem Anjarwalla come di kontri.\nAlthough BBC neva fit confam dis report.\nOga Anjarwalla bin run comot Nigeria afta e escape from lawful custody for March.\nNational Security Adviser, Nuhu Ribadu bin tok for statement say Anjarwalla use im Kenyan passport to escape from Nigeria.\nDi kontri now dey \"work wit Interpol to get international arrest warrant on di suspect\", di Office of the National Security Adviser (ONSA) tok for one statement.\nNigeria goment bin arrest Anjarwalla wey hold both British and Kenyan passports for February alongside im colleague, Tigran Gambaryan as part of one tax evasion gbege against di cryptocurrency exchanges.\nDia detention dey come as Nigerian authorities dey torchlight alleged wrongdoing by Binance.\nEFCC bin file money laundering charge against Binance and dem name Gambaryan and Anjarwalla among di respondents.\nOga Gambaryan still dey for custody.\nDi Federal Inland Revenue Service accuse di cryptocurrency platform of non-payment of value added tax, company income tax, failure to file tax returns and say dem get hand for customers to evade taxes through dia platform.\nHow Binance executive take japa\nHow Binance executive take japa\nTori be say Oga Najeem wey be 38 years old japa from im guest house last Friday afta guards wey dey monitor am bin escort am to di mosque for prayers.\nAuthorities believe say Najeem wey be British and Kenyan citizen bin fly out of Abuja wit one Middle East airliner.\nE neva dey clear how Anjarwalla bin manage to get on di international flight despite say dem seize im British passport, wey be wetin im bin take enta Nigeria.\nSecurity operatives don begin work on how dem go fit sabi Anjarwalla destination so dem go bring am back to custody.\nAnjarwalla na Binance Africa regional manager, and Tigran Gambaryan na US citizen wey dey oversee financial crime compliance for crypto exchange platform.\nDem detain di two Binance executives wen dem land for Nigeria on 26 February 2024.\nMeanwhile, ONSA don beg di Nigerian public and di international community to provide whatever information dem get wey fit assist law enforcement agencies to catch di suspect.\nWho be Nadeem Anjarwalla\nWho be Nadeem Anjarwalla\nNadeem Anjarwalla na British lawyer and Kenya-based manager for Binance Africa.\nBefore e join Binance, Nadeem bin serve as Partner for Global Founders Capital. For dis global venture capital fund, e make and manage di fund investments across Africa, primarily for early-stage technology-enabled businesses.\nE bin also serve as General Manager for Uber Eats.\nAccording to Standford University wey e get im Masters Degree, Nadeem originally come from Mobasa, Kenya and join di 2013 cohort.\nDi primary focus of im study surround di relationship between government policy and business development for Sub Saharan Africa and how business models don adapt to growing government intervention for di market economy.\nBefore e enrol for Stanford, Nadeem bin practice law for one law firm for Nairobi. E dey exposed to regulatory and commercial framework across kontris for East Africa particularly for di oil and gas, energy and real estate sectors.\nNadeem get degree in Philosophy, Politics and Economics from di University of Oxford and Law degree from BPP Law School and MA from Stanford University\nE be passionate skier wey dey excited about di proximity of Tahoe.\nCharges wey Nigerian gomment sama Binance\nCharges wey Nigerian gomment sama Binance\nDi federal goment tok say dem dey committed to make sure say compliance wit tax regulations dey and dem go tackle any financial wrong wey dey shele within di cryptocurrency sector.\nDi goment bin sama legal action against Binance sake of suspected mago-mago activity for dia wey dem say dey cause gbege for Nigeria economy.\nFederal Inland Revenue Service (FIRS) bin announce on Monday say dem don formally lodge charges against Binance for di Federal High Court, Abuja.\nFor suit number FHC/ABJ/CR/115/2024, di lawsuit implicate Binance wit four-count tax evasion accuse.\nTwo senior executives of Binance Tigran Gambaryan and Nadeem Anjarwalla be second and third defendants for di suit.\nDi charges against Binance include allegations of non-payment of Value-Added Tax (VAT), Company Income Tax, failure to file tax returns, and say dem dey aid customers to evade taxes through di platform.\nAccuse say Binance no register wit FIRS for tax purposes wey go against tax regulations wey dey ground for di kontri.\nAnoda na Binance failure to collect and remit different categories of taxes to di federation, as Section 40 of di FIRS Establishment Act 2007 as amended tok.\nDi revenue agency say di section clearly address non-deduction and non-remittance of taxes, prescribe penalties and potential imprisonment for pesin wey go against am.\nBinance allegedly violate tax laws, like failure to issue invoices for VAT purposes, wey make am difficult for subscribers to fit sabi and pay taxes.\n'Any company wey dey conduct business wey pass N25 million annually dey seen, by di Finance Act to dey present for Nigeria,' FIRS tok.\n'According to dis rule, Binance fall for dat category. So, dem need to pay taxes like Company Income Tax (CIT) and also collect and remit Value Added Tax (VAT). However, Binance no stick to dis requirements, so dem violate Nigerian laws and potentially face investigation and legal action for dis infraction.'",
+            "rights": "bbc.com",
+            "rank": 79,
+            "topic": "news",
+            "country": "GB",
+            "language": "en",
+            "authors": "",
+            "media": "https://ichef.bbci.co.uk/news/1024/branded_pidgin/1bfb/live/27011d10-009b-11ef-bcf9-3f2dea9c46e7.jpg",
+            "is_opinion": false,
+            "twitter_account": "@BBCNews",
+            "_score": 4.516201,
+            "_id": "0f0bdc050cd0a1412f0b5547a3b03097"
+        },
+        {
+            "title": "Why food prices still dey rise even as naira dey strong against dollar?",
+            "author": "",
+            "published_date": "2024-04-16 11:20:47",
+            "published_date_precision": "full",
+            "link": "https://www.bbc.com/pidgin/articles/cp0gqv4d1qzo",
+            "clean_url": "bbc.com",
+            "excerpt": "Food inflation for Nigeria rise pass 40% in March 2024 even though di naira bin make serious gains against di dollar.",
+            "summary": "Wia dis foto come from, Getty Images Di National Bureau of Statistics (NBS) wey dey give official data for Nigeria, release di inflation figure for March 2024, and e show say inflation rise to 33.20% from 31.70% from February 2024. Dis dey come despite di fact say di naira don dey appreciate consistently against di dollar in di past month, sotay, some bureau de change operators dey exchange am for below N1000 for one dollar. In February, $1 dey exchange for almost N2000 for di black market, but sake of some measures wey di Central Bank of Nigeria put in place, di naira don gain. However, people dey wonder why dis developments no dey affect di price of goods in di market, especially food items. According to NBS, food inflation for di month of March 2024 dey over 40%, as against di 24.45% e bin dey for March 2023. David Onyekwere, wey be farmer and agripreneur tell BBC Pidgin say \"di dollar no be di only tin wey dey determine di price of food for Nigeria\". \"Di major reason why food dey cost, and e go still dey high for some time na: insecurity and lack of infrastructure,\" Onyekwere tok. Wia dis foto come from, Cheapmarketdeal/Instagram Wetin we call dis foto, David Onyekwere tok say insecurity and lack of infrastructure na wetin dey carry food prices go up \"Many farmers no dey fit go harvest dia crop for inside bush sake of insecurity. Some of dem need to pay bandits bifor dem go fit access dia farms. So dem go put all dis expenses on top wen dem wan sell. \"Also, bicos fewer farmers dey fit go harvest crops, di demand for food products dey too much pass supply and e follow dey contribute to high prices.\" Onyekwere also tok say many roads wey dey connect di food producing communities to popular markets, no good, and e dey make logistics to go up. \"As for di issue of naira and dollar, remember say dis tin start around May and June of 2023 wey be di peak planting season. Many farmers bin don buy dia planting materials very costly at dat time sake of di naira depreciation. So dem need to factor am in wen dem dey sell dia products,\" e tok. \"However, if naira continue to dey gain like dis, food prices fit come down towards di end of 2024 and early 2025, bicos farmers wey dey plant now dey buy dia materials a bit cheaper.\" Dr Okey Okere, wey bi economist and financial analyst also agree say, \"e go take small time bifor we go see a reduction in prices\". \"If person don already buy tins for sale wen di dollar dey for N1500, and now dollar don fall to N1000, di pesin go still dey sell im market at high price make e for recoup im money. So na small small bifor prices go come down,\" Dr Okere tok. On di long run, Okere add, even after prices don dey drop, Nigeria inflation no dey likely to drop below 12%. \"For a developing economy like our own, to achieve a single digit inflation na big big achievement, and e go require plenty prudent work on di part of goment to achieve dat.\" Chop chop\nNigeria\nHigh cost of things\nBuy and Sell\nEconomy\nWia dis foto come from, Getty Images\nWia dis foto come from, Getty Images Di National Bureau of Statistics (NBS) wey dey give official data for Nigeria, release di inflation figure for March 2024, and e show say inflation rise to 33.20% from 31.70% from February 2024.\nDis dey come despite di fact say di naira don dey appreciate consistently against di dollar in di past month, sotay, some bureau de change operators dey exchange am for below N1000 for one dollar.\nIn February, $1 dey exchange for almost N2000 for di black market, but sake of some measures wey di Central Bank of Nigeria put in place, di naira don gain.\nHowever, people dey wonder why dis developments no dey affect di price of goods in di market, especially food items.\nAccording to NBS, food inflation for di month of March 2024 dey over 40%, as against di 24.45% e bin dey for March 2023.\nDavid Onyekwere, wey be farmer and agripreneur tell BBC Pidgin say \"di dollar no be di only tin wey dey determine di price of food for Nigeria\".\n\"Di major reason why food dey cost, and e go still dey high for some time na: insecurity and lack of infrastructure,\" Onyekwere tok.\nWia dis foto come from, Cheapmarketdeal/Instagram\nWia dis foto come from, Cheapmarketdeal/Instagram Wetin we call dis foto, David Onyekwere tok say insecurity and lack of infrastructure na wetin dey carry food prices go up \"Many farmers no dey fit go harvest dia crop for inside bush sake of insecurity. Some of dem need to pay bandits bifor dem go fit access dia farms. So dem go put all dis expenses on top wen dem wan sell.\n\"Also, bicos fewer farmers dey fit go harvest crops, di demand for food products dey too much pass supply and e follow dey contribute to high prices.\"\nOnyekwere also tok say many roads wey dey connect di food producing communities to popular markets, no good, and e dey make logistics to go up.\n\"As for di issue of naira and dollar, remember say dis tin start around May and June of 2023 wey be di peak planting season. Many farmers bin don buy dia planting materials very costly at dat time sake of di naira depreciation. So dem need to factor am in wen dem dey sell dia products,\" e tok.\n\"However, if naira continue to dey gain like dis, food prices fit come down towards di end of 2024 and early 2025, bicos farmers wey dey plant now dey buy dia materials a bit cheaper.\"\nDr Okey Okere, wey bi economist and financial analyst also agree say, \"e go take small time bifor we go see a reduction in prices\".\n\"If person don already buy tins for sale wen di dollar dey for N1500, and now dollar don fall to N1000, di pesin go still dey sell im market at high price make e for recoup im money. So na small small bifor prices go come down,\" Dr Okere tok.\nOn di long run, Okere add, even after prices don dey drop, Nigeria inflation no dey likely to drop below 12%.\n\"For a developing economy like our own, to achieve a single digit inflation na big big achievement, and e go require plenty prudent work on di part of goment to achieve dat.\"\nChop chop\nNigeria\nHigh cost of things\nBuy and Sell\nEconomy",
+            "rights": "bbc.com",
+            "rank": 79,
+            "topic": "news",
+            "country": "GB",
+            "language": "en",
+            "authors": "",
+            "media": "https://ichef.bbci.co.uk/news/1024/branded_pidgin/c240/live/25db4240-fbdb-11ee-bbcb-57c9a3db37cb.jpg",
+            "is_opinion": false,
+            "twitter_account": "@BBCNews",
+            "_score": 4.2863603,
+            "_id": "9062a740e63f09d14a50fa24d93f36b6"
+        },
+        {
+            "title": "Smoking ban for people born after 2009 backed by MPs",
+            "author": "",
+            "published_date": "2024-04-17 05:50:04",
+            "published_date_precision": "full",
+            "link": "https://www.bbc.com/newsround/68827044",
+            "clean_url": "bbc.com",
+            "excerpt": "The government wants to stop people smoking by raising the legal age limit for buying cigarettes.",
+            "summary": ", Smoking will be banned in the UK for future generations MPs have voted to ban cigarettes for anyone born after 2009.\nMPs have voted to ban cigarettes for anyone born after 2009. Prime Minister Rishi Sunak's plan aims to create the UK's first smoke-free generation.\nIt means people who were born in 2009 and the years following won't ever be able to legally buy cigarettes in the UK if the bill becomes law.\nThe government says the ban will save thousands of lives - according to the NHS smoking is one of the biggest causes of death and illness in the UK.\n, The tobacco in cigarettes contains thousands of chemicals If this bill that has been voted for by MPs becomes law, it will mean the UK will have some of the world's toughest anti-smoking laws.\nThe Tobacco and Vapes Bill would stop anyone turning 15 this year from buying cigarettes.\nIf the bill becomes law, selling tobacco products will become illegal, rather than the act of smoking itself.\nThe law will not affect those who are allowed to buy cigarettes now.\nMedia caption, Why are people worried about young people vaping?\nThe ban would also raise the legal age people can buy cigarettes by one year every year.\nThe aim is to prevent children and teenagers from taking up the habit.\nThe plan also aims to make vapes less appealing to children in the UK, with new restrictions on flavours, packaging and the sale of vapes.\nThe government says it will introduce £100 on-the-spot fines for shops in England and Wales which sell tobacco and vapes to underage people.\n, Smoking can lead to many health conditions Cigarettes contains thousands of chemicals. Some of these are dangerous to humans and are breathed in through smoking.\nSmoking is linked to serious illnesses, including cancer, lung disease, heart disease and strokes.\nThe government says it is still the number one preventable cause of death, disability and ill health, causing around 80,000 deaths per year across the UK, and costing the NHS and the economy an estimated £17bn every year.\nAccording to the government, creating a \"smoke-free generation\" could prevent more than 470,000 cases of heart disease, stroke, lung cancer and other diseases by the end of the century.\nChildren's doctors also warn vaping may cause long-term damage to young people's lungs, hearts and brains.\nIt's currently illegal to smoke inside public buildings, in the workplace, on public transport and in a car while carrying somebody aged 18 or under. This is to combat the harmful effects of breathing in cigarette smoke.\nImage source, Getty Images The Tobacco and Vapes Bill passed by 383 votes to 67, meaning it has a lot of support among MPs.\nHealth Secretary Victoria Atkins told MPs \"there is no liberty in addiction\" when defending the plan in parliament.\nEngland's chief medical officer Professor Sir Chris Whitty said once people become addicted to smoking \"their choice is taken away\".\nAnd Labour's shadow health and social secretary Wes Streeting confirmed that they would make sure the ban becomes law if they win the next general election.\nBut former Prime Minister Liz Truss told the BBC while it's important to protect children, people should be able to make their own decisions. She said: \"We shouldn't be telling people not to smoke and I worry about where it will lead.\"\nThe new rules will apply to all shops selling cigarettes in the UK, but anyone buying them abroad would be able to bring them back as long as they were legally brought elsewhere.\nThe government aims to have the new system in force by 2027.",
+            "rights": "bbc.com",
+            "rank": 79,
+            "topic": "news",
+            "country": "GB",
+            "language": "en",
+            "authors": "",
+            "media": "https://ichef.bbci.co.uk/news/1024/branded_bbc/4746/production/_133164281_gettyimages-1003427390.jpg",
+            "is_opinion": false,
+            "twitter_account": "@BBCNewsround",
+            "_score": 4.1262717,
+            "_id": "a2a819c8270901b68527ca4d92e25e5a"
+        }
+    ],
+    "user_input": {
+        "q": "economy",
+        "search_in": [
+            "title_summary_en"
+        ],
+        "lang": [
+            "en"
+        ],
+        "not_lang": null,
+        "countries": null,
+        "not_countries": null,
+        "from": "2024-04-16 00:00:00",
+        "to": null,
+        "ranked_only": "True",
+        "from_rank": null,
+        "to_rank": null,
+        "sort_by": "relevancy",
+        "page": 1,
+        "size": 100,
+        "sources": [
+            "bbc.com"
+        ],
+        "not_sources": [],
+        "topic": null,
+        "published_date_precision": null
+    }
 }

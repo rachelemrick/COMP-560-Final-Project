@@ -1,0 +1,656 @@
+---
+title: "Polarity_score_analysis_withOpinionFlag"
+output:
+  pdf_document: default
+  html_document: default
+date: "2024-04-28"
+---
+
+## R Markdown
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+data <- read.csv("/Users/winni/Desktop/Comp\ 560/polarity_scores_fr_no_dupes.csv")
+
+data$Clean.Link <- gsub(".com", "", data$`Clean.Link`, fixed = TRUE)
+data$Clean.Link<- as.factor(data$Clean.Link)
+data <- data %>%
+  rename(News_Org = Clean.Link)
+
+```
+
+
+```{r}
+data_cleaned <- data[data$Opinion != "", ]
+unique(data_cleaned$Opinion)
+```
+
+
+opinion_articles <- subset(data, Opinion == "True")
+non_opinion_articles <- subset(data, Opinion == "False")
+
+head(non_opinion_articles)
+head(opinion_articles)
+
+```{r}
+t_test <- t.test(data_cleaned$Whole.Article.Compound.Polarity ~ data_cleaned$Opinion)
+cat("T-test p-value:", t_test$p.value, "\n")
+```
+```{r}
+grouped_data <- data %>%
+  group_by(News_Org) %>%
+  summarise(
+    Mean_Compound_Polarity = mean(Whole.Article.Compound.Polarity, na.rm = TRUE),
+    Mean_Pos_Polarity = mean(Whole.Article.Pos.Polarity, na.rm = TRUE),
+    Mean_Neu_Polarity = mean(Whole.Article.Neu.Polarity, na.rm = TRUE),
+    Mean_Neg_Polarity = mean(Whole.Article.Neu.Polarity, na.rm = TRUE)
+  )
+print(grouped_data)
+```
+
+```{r}
+#Whole.Article.Compound.Polarity per news org
+#opinion
+opinion_grouped_data <- opinion_articles %>%
+  group_by(News_Org) %>%
+  summarise(
+    Mean_Compound_Polarity = mean(Whole.Article.Compound.Polarity, na.rm = TRUE),
+    Median_Polarity = median(Whole.Article.Compound.Polarity, na.rm = TRUE),
+    SD_Polarity = sd(Whole.Article.Compound.Polarity, na.rm = TRUE),
+    Count = n()
+  )
+print(opinion_grouped_data)
+
+ggplot(opinion_articles, aes(x = News_Org, y = Whole.Article.Compound.Polarity, fill = News_Org)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title = "Distribution of Whole Article Compound Polarity by News Organization with Opinion",
+       x = "News Organization",
+       y = "Whole Article Compound Polarity")
+
+ggplot(opinion_grouped_data, aes(x = News_Org, y = Mean_Compound_Polarity, fill = News_Org)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Mean Whole Article Compound Polarity by News Organization with Opinion",
+       x = "News Organization",
+       y = "Mean Polarity")
+
+t_test <- t.test(data$Whole.Article.Compound.Polarity ~ data$Opinion)
+cat("T-test p-value:", t_test$p.value, "\n")
+```
+
+```{r}
+
+#non-opinion
+
+non_opinion_grouped_data <- non_opinion_articles %>%
+  group_by(Clean.Link) %>%
+  summarise(
+    Mean_Polarity = mean(Whole.Article.Compound.Polarity, na.rm = TRUE),
+    Median_Polarity = median(Whole.Article.Compound.Polarity, na.rm = TRUE),
+    SD_Polarity = sd(Whole.Article.Compound.Polarity, na.rm = TRUE),
+    Count = n()
+  )
+print(non_opinion_grouped_data)
+
+ggplot(non_opinion_articles, aes(x = Clean.Link, y = Whole.Article.Compound.Polarity, fill = Clean.Link)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title = "Distribution of Whole Article Compound Polarity by News Organization with non-opinion",
+       x = "News Organization",
+       y = "Whole Article Compound Polarity")
+
+ggplot(opinion_grouped_data, aes(x = Clean.Link, y = Mean_Polarity, fill = Clean.Link)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Mean Whole Article Compound Polarity by News Organization with non-opinion",
+       x = "News Organization",
+       y = "Mean Polarity")
+```
+```{r}
+head(opinion_articles)
+library(lubridate)
+
+# Convert Publish_Date to Date format
+opinion_articles$Publish.Date <- ymd_hms(opinion_articles$Publish.Date)
+
+# Plot the trend with formatted dates
+ggplot(opinion_articles, aes(x = as.Date(Publish.Date), y = Whole.Article.Compound.Polarity)) +  # Convert to Date format
+  geom_point() +
+  geom_smooth(method = "loess", se = FALSE) +
+  labs(title = "Trend of Compound Polarity Scores Over Time",
+       x = "Publication Date", y = "Compound Polarity") +
+  scale_x_date(date_labels = "%Y-%m-%d")  # Format x-axis dates
+
+
+correlation_matrix <- cor(data[, c("Whole.Article.Compound.Polarity", "Sentence.Count")], use = "complete.obs")
+print(correlation_matrix)
+
+# Visualize correlation matrix
+corrplot(correlation_matrix, method = "circle", type = "upper")
+
+# 4. Qualitative Analysis
+# Select subset of articles with extreme polarity scores for qualitative analysis
+extreme_articles <- data[abs(data$Compound_Polarity) > 0.8, ]
+
+```
+
+```{r}
+#Whole.Article.Pos.Polarity per news org
+#opinion
+opinion_grouped_data <- opinion_articles %>%
+  group_by(Clean.Link) %>%
+  summarise(
+    Mean_Polarity = mean(Whole.Article.Pos.Polarity, na.rm = TRUE),
+    Median_Polarity = median(Whole.Article.Pos.Polarity, na.rm = TRUE),
+    SD_Polarity = sd(Whole.Article.Pos.Polarity, na.rm = TRUE),
+    Count = n()
+  )
+print(opinion_grouped_data)
+
+ggplot(opinion_articles, aes(x = Clean.Link, y = Whole.Article.Pos.Polarity, fill = Clean.Link)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title = "Distribution of Whole Article Pos Polarity by News Organization with opinion",
+       x = "News Organization",
+       y = "Whole Article Pos Polarity")
+
+ggplot(opinion_grouped_data, aes(x = Clean.Link, y = Mean_Polarity, fill = Clean.Link)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Mean Whole Article Pos Polarity by News Organization with opinion",
+       x = "News Organization",
+       y = "Mean Polarity")
+
+#non-opinion
+non_opinion_grouped_data <- non_opinion_articles %>%
+  group_by(Clean.Link) %>%
+  summarise(
+    Mean_Polarity = mean(Whole.Article.Pos.Polarity, na.rm = TRUE),
+    Median_Polarity = median(Whole.Article.Pos.Polarity, na.rm = TRUE),
+    SD_Polarity = sd(Whole.Article.Pos.Polarity, na.rm = TRUE),
+    Count = n()
+  )
+print(non_opinion_grouped_data)
+
+ggplot(non_opinion_articles, aes(x = Clean.Link, y = Whole.Article.Pos.Polarity, fill = Clean.Link)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title = "Distribution of Whole Article Pos Polarity by News Organization with non_opinion",
+       x = "News Organization",
+       y = "Whole Article Pos Polarity")
+
+ggplot(opinion_grouped_data, aes(x = Clean.Link, y = Mean_Polarity, fill = Clean.Link)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Mean Whole Article Pos Polarity by News Organization with non_opinion",
+       x = "News Organization",
+       y = "Mean Polarity")
+```
+
+
+```{r}
+#Whole.Article.Neg.Polarity per news org
+#opinion
+opinion_grouped_data <- opinion_articles %>%
+  group_by(Clean.Link) %>%
+  summarise(
+    Mean_Polarity = mean(Whole.Article.Neg.Polarity, na.rm = TRUE),
+    Median_Polarity = median(Whole.Article.Neg.Polarity, na.rm = TRUE),
+    SD_Polarity = sd(Whole.Article.Neg.Polarity, na.rm = TRUE),
+    Count = n()
+  )
+print(opinion_grouped_data)
+
+ggplot(opinion_articles, aes(x = Clean.Link, y = Whole.Article.Neg.Polarity, fill = Clean.Link)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title = "Distribution of Whole Article Neg Polarity by News Organization with opinion",
+       x = "News Organization",
+       y = "Whole Article Neg Polarity")
+
+ggplot(opinion_grouped_data, aes(x = Clean.Link, y = Mean_Polarity, fill = Clean.Link)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Mean Whole Article Neg Polarity by News Organization with opinion",
+       x = "News Organization",
+       y = "Mean Polarity")
+
+#non-opinion
+non_opinion_grouped_data <- non_opinion_articles %>%
+  group_by(Clean.Link) %>%
+  summarise(
+    Mean_Polarity = mean(Whole.Article.Neg.Polarity, na.rm = TRUE),
+    Median_Polarity = median(Whole.Article.Neg.Polarity, na.rm = TRUE),
+    SD_Polarity = sd(Whole.Article.Neg.Polarity, na.rm = TRUE),
+    Count = n()
+  )
+print(non_opinion_grouped_data)
+
+ggplot(non_opinion_articles, aes(x = Clean.Link, y = Whole.Article.Neg.Polarity, fill = Clean.Link)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title = "Distribution of Whole Article Neg Polarity by News Organization with non_opinion",
+       x = "News Organization",
+       y = "Whole Article Neg Polarity")
+
+ggplot(non_opinion_grouped_data, aes(x = Clean.Link, y = Mean_Polarity, fill = Clean.Link)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Mean Whole Article Neg Polarity by News Organization with non_opinion",
+       x = "News Organization",
+       y = "Mean Polarity")
+```
+
+```{r}
+#Whole.Article.Neu.Polarity per news org
+#opinion
+opinion_grouped_data <- opinion_articles %>%
+  group_by(Clean.Link) %>%
+  summarise(
+    Mean_Polarity = mean(Whole.Article.Neu.Polarity, na.rm = TRUE),
+    Median_Polarity = median(Whole.Article.Neu.Polarity, na.rm = TRUE),
+    SD_Polarity = sd(Whole.Article.Neu.Polarity, na.rm = TRUE),
+    Count = n()
+  )
+print(opinion_grouped_data)
+
+ggplot(opinion_articles, aes(x = Clean.Link, y = Whole.Article.Neu.Polarity, fill = Clean.Link)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title = "Distribution of Whole Article Neu Polarity by News Organization with opinion",
+       x = "News Organization",
+       y = "Whole Article Neu Polarity")
+
+ggplot(opinion_grouped_data, aes(x = Clean.Link, y = Mean_Polarity, fill = Clean.Link)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Mean Whole Article Neu Polarity by News Organization with opinion",
+       x = "News Organization",
+       y = "Mean Polarity")
+
+#non_opinion
+non_opinion_grouped_data <- non_opinion_articles %>%
+  group_by(Clean.Link) %>%
+  summarise(
+    Mean_Polarity = mean(Whole.Article.Neu.Polarity, na.rm = TRUE),
+    Median_Polarity = median(Whole.Article.Neu.Polarity, na.rm = TRUE),
+    SD_Polarity = sd(Whole.Article.Neu.Polarity, na.rm = TRUE),
+    Count = n()
+  )
+print(non_opinion_grouped_data)
+
+ggplot(non_opinion_articles, aes(x = Clean.Link, y = Whole.Article.Neu.Polarity, fill = Clean.Link)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title = "Distribution of Whole Article Neu Polarity by News Organization with non_opinion",
+       x = "News Organization",
+       y = "Whole Article Neu Polarity")
+
+ggplot(non_opinion_grouped_data, aes(x = Clean.Link, y = Mean_Polarity, fill = Clean.Link)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Mean Whole Article Neu Polarity by News Organization with non_opinion",
+       x = "News Organization",
+       y = "Mean Polarity")
+```
+
+```{r}
+#Whole.Article.Compound.Polarity per issue
+#opinion
+opinion_articles <- opinion_articles %>%
+  mutate(Issue = gsub("_.*", "", Category),
+         News_Org = gsub(".*_", "", Category))
+
+average_polarity_per_issue_opinion <- opinion_articles %>%
+  group_by(Issue) %>%
+  summarise(
+    Avg_Compound_Polarity = mean(Whole.Article.Compound.Polarity, na.rm = TRUE),
+    SD_Compound_Polarity = sd(Whole.Article.Compound.Polarity, na.rm = TRUE),
+    Median_Compound_Polarity = median(Whole.Article.Compound.Polarity, na.rm = TRUE)
+  )
+
+print(average_polarity_per_issue_opinion)
+
+ggplot(average_polarity_per_issue_opinion, aes(x = Issue, y = Avg_Compound_Polarity, fill = Issue)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Average Whole Article Compound Polarity per Issue with opinion",
+       x = "Issue",
+       y = "Average Compound Polarity") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+
+#non_opinion
+non_opinion_articles <- non_opinion_articles %>%
+  mutate(Issue = gsub("_.*", "", Category),
+         News_Org = gsub(".*_", "", Category))
+
+average_polarity_per_issue_non_opinion <- non_opinion_articles %>%
+  group_by(Issue) %>%
+  summarise(
+    Avg_Compound_Polarity = mean(Whole.Article.Compound.Polarity, na.rm = TRUE),
+    SD_Compound_Polarity = sd(Whole.Article.Compound.Polarity, na.rm = TRUE),
+    Median_Compound_Polarity = median(Whole.Article.Compound.Polarity, na.rm = TRUE)
+  )
+
+print(average_polarity_per_issue_non_opinion)
+
+ggplot(average_polarity_per_issue_non_opinion, aes(x = Issue, y = Avg_Compound_Polarity, fill = Issue)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Average Whole Article Compound Polarity per Issue with non_opinion",
+       x = "Issue",
+       y = "Average Compound Polarity") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```{r}
+#Whole.Article.Pos.Polarity per issue
+#opinion
+average_polarity_per_issue_opinion <- opinion_articles %>%
+  group_by(Issue) %>%
+  summarise(
+    Avg_Compound_Polarity = mean(Whole.Article.Pos.Polarity, na.rm = TRUE),
+    SD_Compound_Polarity = sd(Whole.Article.Pos.Polarity, na.rm = TRUE),
+    Median_Compound_Polarity = median(Whole.Article.Pos.Polarity, na.rm = TRUE)
+  )
+
+print(average_polarity_per_issue_opinion)
+
+ggplot(average_polarity_per_issue_opinion, aes(x = Issue, y = Avg_Compound_Polarity, fill = Issue)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Average Whole Article Pos Polarity per Issue with opinion",
+       x = "Issue",
+       y = "Average Pos Polarity") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+
+#non_opinion
+average_polarity_per_issue_non_opinion <- non_opinion_articles %>%
+  group_by(Issue) %>%
+  summarise(
+    Avg_Compound_Polarity = mean(Whole.Article.Pos.Polarity, na.rm = TRUE),
+    SD_Compound_Polarity = sd(Whole.Article.Pos.Polarity, na.rm = TRUE),
+    Median_Compound_Polarity = median(Whole.Article.Pos.Polarity, na.rm = TRUE)
+  )
+
+print(average_polarity_per_issue_non_opinion)
+
+ggplot(average_polarity_per_issue_non_opinion, aes(x = Issue, y = Avg_Compound_Polarity, fill = Issue)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Average Whole Article Pos Polarity per Issue with non_opinion",
+       x = "Issue",
+       y = "Average Pos Polarity") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```{r}
+#Whole.Article.Neg.Polarity per issue
+#opinion
+average_polarity_per_issue_opinion <- opinion_articles %>%
+  group_by(Issue) %>%
+  summarise(
+    Avg_Compound_Polarity = mean(Whole.Article.Neg.Polarity, na.rm = TRUE),
+    SD_Compound_Polarity = sd(Whole.Article.Neg.Polarity, na.rm = TRUE),
+    Median_Compound_Polarity = median(Whole.Article.Neg.Polarity, na.rm = TRUE)
+  )
+
+print(average_polarity_per_issue_opinion)
+
+ggplot(average_polarity_per_issue_opinion, aes(x = Issue, y = Avg_Compound_Polarity, fill = Issue)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Average Whole Article Neg Polarity per Issue with opinion",
+       x = "Issue",
+       y = "Average Neg Polarity") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+#non_opinion
+average_polarity_per_issue_non_opinion <- non_opinion_articles %>%
+  group_by(Issue) %>%
+  summarise(
+    Avg_Compound_Polarity = mean(Whole.Article.Neg.Polarity, na.rm = TRUE),
+    SD_Compound_Polarity = sd(Whole.Article.Neg.Polarity, na.rm = TRUE),
+    Median_Compound_Polarity = median(Whole.Article.Neg.Polarity, na.rm = TRUE)
+  )
+
+print(average_polarity_per_issue_non_opinion)
+
+ggplot(average_polarity_per_issue_non_opinion, aes(x = Issue, y = Avg_Compound_Polarity, fill = Issue)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Average Whole Article Neg Polarity per Issue with non_opinion",
+       x = "Issue",
+       y = "Average Neg Polarity") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```{r}
+#Whole.Article.Neu.Polarity per issue
+#opinion
+average_polarity_per_issue_opinion <- opinion_articles %>%
+  group_by(Issue) %>%
+  summarise(
+    Avg_Compound_Polarity = mean(Whole.Article.Neu.Polarity, na.rm = TRUE),
+    SD_Compound_Polarity = sd(Whole.Article.Neu.Polarity, na.rm = TRUE),
+    Median_Compound_Polarity = median(Whole.Article.Neu.Polarity, na.rm = TRUE)
+  )
+
+print(average_polarity_per_issue_opinion)
+
+ggplot(average_polarity_per_issue_opinion, aes(x = Issue, y = Avg_Compound_Polarity, fill = Issue)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Average Whole Article Neu Polarity per Issue with opinion",
+       x = "Issue",
+       y = "Average Neu Polarity") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+#non_opinion
+average_polarity_per_issue_non_opinion <- non_opinion_articles %>%
+  group_by(Issue) %>%
+  summarise(
+    Avg_Compound_Polarity = mean(Whole.Article.Neu.Polarity, na.rm = TRUE),
+    SD_Compound_Polarity = sd(Whole.Article.Neu.Polarity, na.rm = TRUE),
+    Median_Compound_Polarity = median(Whole.Article.Neu.Polarity, na.rm = TRUE)
+  )
+
+print(average_polarity_per_issue_non_opinion)
+
+ggplot(average_polarity_per_issue_non_opinion, aes(x = Issue, y = Avg_Compound_Polarity, fill = Issue)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Average Whole Article Neu Polarity per Issue with non_opinion",
+       x = "Issue",
+       y = "Average Neu Polarity") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+```{r}
+#opinion
+# Calculate correlation between whole article compound polarity and sentence count
+cor_compound_sentence_opinion <- cor(opinion_articles$`Whole.Article.Compound.Polarity`, opinion_articles$`Sentence.Count`, use = "complete.obs")
+
+# Calculate correlation between whole article neg polarity and sentence count
+cor_neg_sentence_opinion <- cor(opinion_articles$`Whole.Article.Neg.Polarity`, opinion_articles$`Sentence.Count`, use = "complete.obs")
+
+# Calculate correlation between whole article pos polarity and sentence count
+cor_pos_sentence_opinion <- cor(opinion_articles$`Whole.Article.Pos.Polarity`, opinion_articles$`Sentence.Count`, use = "complete.obs")
+
+# Calculate correlation between whole article neu polarity and sentence count
+cor_neu_sentence_opinion <- cor(opinion_articles$`Whole.Article.Neu.Polarity`, opinion_articles$`Sentence.Count`, use = "complete.obs")
+
+#non_opinion
+# Calculate correlation between whole article compound polarity and sentence count
+cor_compound_sentence_non_opinion <- cor(non_opinion_articles$`Whole.Article.Compound.Polarity`, non_opinion_articles$`Sentence.Count`, use = "complete.obs")
+
+# Calculate correlation between whole article neg polarity and sentence count
+cor_neg_sentence_non_opinion <- cor(non_opinion_articles$`Whole.Article.Neg.Polarity`, non_opinion_articles$`Sentence.Count`, use = "complete.obs")
+
+# Calculate correlation between whole article pos polarity and sentence count
+cor_pos_sentence_non_opinion <- cor(non_opinion_articles$`Whole.Article.Pos.Polarity`, non_opinion_articles$`Sentence.Count`, use = "complete.obs")
+
+# Calculate correlation between whole article neu polarity and sentence count
+cor_neu_sentence_non_opinion <- cor(non_opinion_articles$`Whole.Article.Neu.Polarity`, non_opinion_articles$`Sentence.Count`, use = "complete.obs")
+
+# Print the correlations
+print(paste("Correlation of Whole Article Compound Polarity and Sentence Count with opinion:", cor_compound_sentence_opinion))
+print(paste("Correlation of Whole Article Neg Polarity and Sentence Count with opinion:", cor_neg_sentence_opinion))
+print(paste("Correlation of Whole Article Pos Polarity and Sentence Count with opinion:", cor_pos_sentence_opinion))
+print(paste("Correlation of Whole Article Neu Polarity and Sentence Count with opinion:", cor_neu_sentence_opinion))
+
+print(paste("Correlation of Whole Article Compound Polarity and Sentence Count with non_opinion:", cor_compound_sentence_non_opinion))
+print(paste("Correlation of Whole Article Neg Polarity and Sentence Count with non_opinion:", cor_neg_sentence_non_opinion))
+print(paste("Correlation of Whole Article Pos Polarity and Sentence Count with non_opinion:", cor_pos_sentence_non_opinion))
+print(paste("Correlation of Whole Article Neu Polarity and Sentence Count with non_opinion:", cor_neu_sentence_non_opinion))
+
+```
+```{r}
+#Correlation matrix of Polarity and Sentence Count
+#opinion
+polarity_sentence_data_opinion <- opinion_articles[,c('Whole.Article.Compound.Polarity', 
+                                  'Whole.Article.Neg.Polarity', 
+                                  'Whole.Article.Pos.Polarity', 
+                                  'Whole.Article.Neu.Polarity', 
+                                  'Sentence.Count')]
+
+cor_matrix_opinion <- cor(polarity_sentence_data_opinion, use = "complete.obs")
+print(cor_matrix_opinion)
+
+#non_opinion
+polarity_sentence_data_non_opinion <- non_opinion_articles[,c('Whole.Article.Compound.Polarity', 
+                                  'Whole.Article.Neg.Polarity', 
+                                  'Whole.Article.Pos.Polarity', 
+                                  'Whole.Article.Neu.Polarity', 
+                                  'Sentence.Count')]
+
+cor_matrix_non_opinion <- cor(polarity_sentence_data_non_opinion, use = "complete.obs")
+print(cor_matrix_non_opinion)
+library(corrplot)
+corrplot(cor_matrix_opinion, method = "circle")
+corrplot(cor_matrix_non_opinion, method = "circle")
+```
+
+```{r}
+library(patchwork)
+# Perform regression analysis for non_opinion_articles dataset
+reg_compound_non_opinion <- lm(`Whole.Article.Compound.Polarity` ~ `Sentence.Count`, data = non_opinion_articles)
+reg_neg_non_opinion <- lm(`Whole.Article.Neg.Polarity` ~ `Sentence.Count`, data = non_opinion_articles)
+reg_pos_non_opinion <- lm(`Whole.Article.Pos.Polarity` ~ `Sentence.Count`, data = non_opinion_articles)
+reg_neu_non_opinion <- lm(`Whole.Article.Neu.Polarity` ~ `Sentence.Count`, data = non_opinion_articles)
+
+# Perform regression analysis for opinion_articles dataset
+reg_compound_opinion <- lm(`Whole.Article.Compound.Polarity` ~ `Sentence.Count`, data = opinion_articles)
+reg_neg_opinion <- lm(`Whole.Article.Neg.Polarity` ~ `Sentence.Count`, data = opinion_articles)
+reg_pos_opinion <- lm(`Whole.Article.Pos.Polarity` ~ `Sentence.Count`, data = opinion_articles)
+reg_neu_opinion <- lm(`Whole.Article.Neu.Polarity` ~ `Sentence.Count`, data = opinion_articles)
+
+# Compound
+plot_non_opinion <- ggplot(non_opinion_articles, aes(x = `Sentence.Count`, y = `Whole.Article.Compound.Polarity`)) +
+  geom_point() +
+  geom_smooth(method = "lm", col = "blue") +
+  labs(title = "Non-opinion",
+       x = "Sentence Count",
+       y = "Whole Article Compound Polarity")
+
+plot_opinion <- ggplot(opinion_articles, aes(x = `Sentence.Count`, y = `Whole.Article.Compound.Polarity`)) +
+  geom_point() +
+  geom_smooth(method = "lm", col = "red") +
+  labs(title = "Opinion",
+       x = "Sentence Count",
+       y = "Whole Article Compound Polarity")
+
+plot_non_opinion + plot_opinion
+
+#Neg
+plot_non_opinion <- ggplot(non_opinion_articles, aes(x = `Sentence.Count`, y = `Whole.Article.Neg.Polarity`)) +
+  geom_point() +
+  geom_smooth(method = "lm", col = "blue") +
+  labs(title = "Non-opinion",
+       x = "Sentence Count",
+       y = "Whole Article Neg Polarity")
+
+plot_opinion <- ggplot(opinion_articles, aes(x = `Sentence.Count`, y = `Whole.Article.Neg.Polarity`)) +
+  geom_point() +
+  geom_smooth(method = "lm", col = "red") +
+  labs(title = "Opinion",
+       x = "Sentence Count",
+       y = "Whole Article Neg Polarity")
+
+plot_non_opinion + plot_opinion
+
+#Neu
+plot_non_opinion <- ggplot(non_opinion_articles, aes(x = `Sentence.Count`, y = `Whole.Article.Neu.Polarity`)) +
+  geom_point() +
+  geom_smooth(method = "lm", col = "blue") +
+  labs(title = "Non-opinion",
+       x = "Sentence Count",
+       y = "Whole Article Neu Polarity")
+
+plot_opinion <- ggplot(opinion_articles, aes(x = `Sentence.Count`, y = `Whole.Article.Neu.Polarity`)) +
+  geom_point() +
+  geom_smooth(method = "lm", col = "red") +
+  labs(title = "Opinion",
+       x = "Sentence Count",
+       y = "Whole Article Neu Polarity")
+
+plot_non_opinion + plot_opinion
+
+#Pos
+plot_non_opinion <- ggplot(non_opinion_articles, aes(x = `Sentence.Count`, y = `Whole.Article.Pos.Polarity`)) +
+  geom_point() +
+  geom_smooth(method = "lm", col = "blue") +
+  labs(title = "Non-opinion",
+       x = "Sentence Count",
+       y = "Whole Article Pos Polarity")
+
+plot_opinion <- ggplot(opinion_articles, aes(x = `Sentence.Count`, y = `Whole.Article.Pos.Polarity`)) +
+  geom_point() +
+  geom_smooth(method = "lm", col = "red") +
+  labs(title = "Opinion",
+       x = "Sentence Count",
+       y = "Whole Article Pos Polarity")
+
+plot_non_opinion + plot_opinion
+
+```
+
+```{r}
+Issue_News_Org_Opinion <- opinion_articles %>%
+  group_by(Issue, Clean.Link) %>%
+  summarise(Avg_Compound_Polarity_Opinion = mean(Whole.Article.Compound.Polarity, na.rm = TRUE),
+            Avg_Pos_Polarity_Opinion = mean(Whole.Article.Pos.Polarity, na.rm = TRUE),
+            Avg_Neu_Polarity_Opinion = mean(Whole.Article.Neu.Polarity, na.rm = TRUE),
+            Avg_Neg_Polarity_Opinion = mean(Whole.Article.Neg.Polarity, na.rm = TRUE)
+            )
+print(Issue_News_Org_Opinion)
+
+Issue_News_Org_Non_Opinion <- non_opinion_articles %>%
+  group_by(Issue, Clean.Link) %>%
+  summarise(Avg_Compound_Polarity_nonOpinion = mean(Whole.Article.Compound.Polarity, na.rm = TRUE),
+            Avg_Pos_Polarity_Opinion = mean(Whole.Article.Pos.Polarity, na.rm = TRUE),
+            Avg_Neu_Polarity_Opinion = mean(Whole.Article.Neu.Polarity, na.rm = TRUE),
+            Avg_Neg_Polarity_Opinion = mean(Whole.Article.Neg.Polarity, na.rm = TRUE)
+            )
+print(Issue_News_Org_Non_Opinion)
+
+
+ggplot(Issue_News_Org_Opinion, aes(x = Issue, y = Avg_Compound_Polarity_Opinion, color = Clean.Link)) +
+  geom_point() +
+  labs(title = "Average Compound Polarity by Issue and News Organization (Opinion)",
+       x = "Issue",
+       y = "Average Compound Polarity") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplot(Issue_News_Org_Non_Opinion, aes(x = Issue, y = Avg_Compound_Polarity_nonOpinion, color = Clean.Link)) +
+  geom_point() +
+  labs(title = "Average Compound Polarity by Issue and News Organization (Non Opinion)",
+       x = "Issue",
+       y = "Average Compound Polarity") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```

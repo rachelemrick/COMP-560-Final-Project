@@ -1,0 +1,293 @@
+---
+title: "Final_Results_Analysis"
+output:
+  pdf_document: default
+  html_document: default
+date: "2024-05-02"
+---
+
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+
+## Data Cleaning
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+data <- read.csv("/Users/winni/Desktop/Comp\ 560/polarity_scores_fr_no_dupes.csv")
+
+data$Clean.Link <- gsub(".com", "", data$`Clean.Link`, fixed = TRUE)
+data$Clean.Link<- as.factor(data$Clean.Link)
+data <- data %>%
+  rename(News_Org = Clean.Link)
+
+data <- data %>%
+  mutate(Issue = gsub("_.*", "", Category))
+
+summary(data)
+```
+```{r}
+# Histogram for Whole Article Compound Polarity
+hist(data$Whole.Article.Compound.Polarity, xlab = "Whole Article Compound Polarity", ylab = "Frequency", main = "Histogram of Whole Article Compound Polarity")
+
+# Histogram for Average Sentence Compound Polarity
+hist(data$Average.Sentence.Compound.Polarity, xlab = "Average Sentence Compound Polarity", ylab = "Frequency", main = "Histogram of Average Sentence Compound Polarity")
+
+```
+Picked Compound Polarity Score for Whole Article -> more standard: max=1 and min=-1
+
+Analyzing the "Whole Article Compound Polarity" data for investigating polarity scores among different news organizations offers several advantages. Firstly, it provides a holistic view of sentiment expressed throughout entire articles, crucial for understanding the overall stance or bias of each news outlet. Secondly, by examining the skewness towards positive or negative polarity, one can discern editorial biases, aiding in comparative analysis across organizations. Additionally, this approach simplifies interpretation by focusing on the overarching narrative, aligning closely with the message and tone set by publications. Ultimately, using whole article polarity facilitates a nuanced understanding of media bias and its influence on public perception.
+## Importance of Publish Time
+```{r}
+library(lubridate)
+
+# Convert Publish_Date to Date format
+data$Publish.Date <- ymd_hms(data$Publish.Date)
+
+# Plot the trend with formatted dates
+ggplot(data, aes(x = as.Date(Publish.Date), y = Whole.Article.Compound.Polarity)) +  # Convert to Date format
+  geom_point() +
+  geom_smooth(method = "loess", se = FALSE) +
+  labs(title = "Trend of Compound Polarity Scores Over Time",
+       x = "Publication Date", y = "Compound Polarity") +
+  scale_x_date(date_labels = "%Y-%m-%d")  # Format x-axis dates
+```
+
+Weak trend
+## Importance of Opinion Flags
+```{r}
+data_cleaned <- data[data$Opinion != "", ]
+
+t_test <- t.test(data_cleaned$Whole.Article.Compound.Polarity ~ data_cleaned$Opinion)
+cat("T-test p-value:", t_test$p.value, "\n")
+
+```
+As 0.086 > 0.05, not siginificant -> not influencing factor
+
+## Compound Analysis for each news organization
+```{r}
+grouped_data <- data %>%
+  group_by(News_Org) %>%
+  summarise(
+    Mean_Compound_Polarity = mean(Whole.Article.Compound.Polarity, na.rm = TRUE),
+  )
+print(grouped_data)
+```
+BBC: Demonstrates the highest mean compound polarity score, indicating a predominantly positive sentiment in their articles.
+CBS News: Shows a moderately positive mean compound polarity score, suggesting a generally positive sentiment in their articles, albeit lower than BBC.
+CNN: Exhibits a slightly negative mean compound polarity score, indicating a tendency towards negative sentiment in their articles.
+Fox News: Displays a more negative mean compound polarity score compared to others, indicating a stronger tendency towards negative sentiment in their articles.
+NBC News: Shows a slightly negative mean compound polarity score, similar to CNN but with slightly less negativity.
+New York Times (NYT): Exhibits a slightly negative mean compound polarity score, similar to CNN and NBC News.
+Washington Post: Demonstrates a positive mean compound polarity score, indicating a predominantly positive sentiment in their articles, though lower than BBC.
+
+#statistical test based on News_org
+
+```{r}
+# Perform one-way ANOVA
+anova_result <- aov(Whole.Article.Compound.Polarity ~ News_Org, data)
+
+# Check the ANOVA summary
+summary(anova_result)
+
+# Check if the assumptions of ANOVA are met
+# Since the Shapiro-Wilk test cannot be performed, you can skip it in this case
+
+# For homogeneity of variances assumption
+tryCatch(
+  {
+    bartlett_test <- bartlett.test(Whole.Article.Compound.Polarity ~ News_Org, data)
+    print(bartlett_test)
+  },
+  error = function(e) {
+    print("Bartlett's test cannot be performed due to unequal group sizes or other issues.")
+  }
+)
+
+# Perform Kruskal-Wallis test as an alternative
+kruskal_test <- kruskal.test(Whole.Article.Compound.Polarity ~ News_Org, data)
+print(kruskal_test)
+
+```
+
+This conducts a one-way ANOVA to analyze the relationship between the variable "Whole.Article.Compound.Polarity" and the grouping variable "News_Org." The ANOVA summary indicates a significant difference in means among the groups (News_Org) with a very small p-value (<2e-16).
+
+Additionally, Bartlett's test is performed to assess the homogeneity of variances assumption. However, Bartlett's test returns a significant result (p-value = 0.0001173), suggesting that the variances are not equal across groups.
+
+As an alternative to ANOVA, the Kruskal-Wallis test is conducted to compare the medians of "Whole.Article.Compound.Polarity" among the groups. The Kruskal-Wallis test also shows a highly significant result (p-value < 2.2e-16), indicating that there are significant differences among the groups.
+
+In summary, both ANOVA and Kruskal-Wallis tests suggest that there are significant differences among the groups in terms of "Whole.Article.Compound.Polarity," with the Kruskal-Wallis test being the preferred option when the assumption of equal variances is violated.
+
+Thus, we conclude that there are statistically significant differences in mean compound polarity scores between news organizations.
+
+## Only Issue
+
+```{r}
+grouped_data <- data %>%
+  group_by(Issue) %>%
+  summarise(
+    Mean_Compound_Polarity = mean(Whole.Article.Compound.Polarity, na.rm = TRUE),
+  )
+print(grouped_data)
+```
+
+
+```{r}
+# Perform one-way ANOVA
+anova_result <- aov(Whole.Article.Compound.Polarity ~ Issue, data)
+
+# Check the ANOVA summary
+summary(anova_result)
+
+# Check if the assumptions of ANOVA are met
+# Since the Shapiro-Wilk test cannot be performed, you can skip it in this case
+
+# For homogeneity of variances assumption
+bartlett_test <- bartlett.test(Whole.Article.Compound.Polarity ~ Issue, data)
+print(bartlett_test)
+
+# If assumptions are not met, consider using non-parametric alternatives like Kruskal-Wallis test
+
+# Perform post-hoc tests if ANOVA is significant (optional)
+# For example, Tukey's HSD test
+tukey_result <- TukeyHSD(anova_result)
+print(tukey_result)
+
+
+```
+The ANOVA table shows that the p-value associated with the "Issue" variable is very small (<2e-16), indicating that there are significant differences in mean compound polarity scores among different issues.
+The Bartlett test of homogeneity of variances (p-value = 0.000847) suggests that the assumption of homogeneity of variances may be violated, indicating that the variance of compound polarity scores may not be equal across all groups defined by the "Issue" variable.
+The Tukey multiple comparisons of means provide further insights into specific differences between different issue categories. For example, it highlights significant differences between certain pairs of issue categories, such as "gun-abortion," "Israel-abortion," "Trump-abortion," etc., with p-values less than 0.05.
+Therefore, based on these results, we can conclude that there are significant differences in mean compound polarity scores among different issues, and further investigation into the specific pairwise differences identified by the Tukey test may provide additional insights.
+
+# Sentence Count
+
+```{r}
+library(corrplot)
+polarity_sentence_data <- data[,c('Whole.Article.Compound.Polarity', 
+                                  'Whole.Article.Neg.Polarity', 
+                                  'Whole.Article.Pos.Polarity', 
+                                  'Whole.Article.Neu.Polarity', 
+                                  'Sentence.Count')]
+
+cor(polarity_sentence_data, use = "complete.obs")
+
+cor_matrix_opinion <- cor(polarity_sentence_data, use = "complete.obs")
+corrplot(cor_matrix_opinion, method = "circle")
+```
+
+Small Correlation with Sentence Count for Whole.Article.Compound.Polarity -> not strong influencing factor
+
+# Understand if Issue affecting or News Organization really affecting
+
+```{r}
+library(tidyverse)
+library(car)
+
+# Perform ANOVA for Issue and News_Org
+anova_issue <- aov(Whole.Article.Compound.Polarity ~ Issue, data=data)
+anova_org <- aov(Whole.Article.Compound.Polarity ~ News_Org, data=data)
+
+# Summary of ANOVA for Issue and News_Org
+summary(anova_issue)
+summary(anova_org)
+
+# Post-hoc tests for Issue using Tukey's HSD
+issue_tukey <- TukeyHSD(anova_issue)
+print(issue_tukey)
+
+# Post-hoc tests for News_Org using Tukey's HSD
+org_tukey <- TukeyHSD(anova_org)
+print(org_tukey)
+
+```
+The analysis of variance (ANOVA) results indicate significant differences in mean compound polarity scores between both the Issue (F(11, 4628) = 35.24, p < 0.001) and News Organization (F(6, 4633) = 18.32, p < 0.001) factors. Post-hoc tests for the Issue factor using Tukey's HSD method reveal specific pairwise differences between some categories, suggesting varying levels of sentiment across different issues. For example, there are significant differences in compound polarity scores between "gun" and several other issues such as "Biden," "Trump," and "climate," indicating distinct sentiments associated with these topics. Similarly, post-hoc tests for the News Organization factor indicate significant differences between most pairs of news organizations, except for some comparisons involving "cbsnews" and "nytimes." Overall, these findings suggest that both the type of issue and the news organization significantly influence the sentiment expressed in news articles. These results underscore the importance of considering both factors when analyzing media content and highlight potential differences in editorial stance and coverage bias across various issues and news outlets.
+
+#Break down by Issue
+
+```{r}
+library(ggplot2)
+library(dplyr)
+issues <- c("abortion", "Biden", "climate", "conservative", "Democrat", "economy", "education", "gun", "Israel", "liberal", "Republican", "Trump")
+
+issue_subsets <- lapply(issues, function(issue) {
+  subset(data, Issue == issue)
+})
+
+for (i in 1:length(issues)) {
+  issue <- issues[i]
+  subset_data <- issue_subsets[[i]]
+  cat("Issue:", issue, "\n")
+  print(summary(subset_data$Whole.Article.Compound.Polarity))
+  cat("\n")
+  anova_result <- aov(Whole.Article.Compound.Polarity ~ News_Org, data = subset_data)
+  print(summary(anova_result))
+  cat("\n")
+}
+
+ggplot(data, aes(x = Issue, y = Whole.Article.Compound.Polarity, fill = News_Org)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Distribution of Mean Compound Polarity by Issue and News Organization",
+       x = "Issue",
+       y = "Compound Polarity",
+       fill = "News Organization")
+
+
+means <- data %>%
+  group_by(News_Org) %>%
+  summarise(Mean_Polarity = mean(Whole.Article.Compound.Polarity, na.rm = TRUE)) %>%
+  ungroup()
+
+# Plot
+ggplot(means, aes(x = News_Org, y = Mean_Polarity, fill = News_Org)) +
+  geom_col(position = position_dodge()) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Mean Compound Polarity by News Organization",
+       x = "News Organization",
+       y = "Mean Compound Polarity",
+       fill = "News Organization")
+```
+Abortion:
+The mean compound polarity score ranges from -0.9993 to 0.9999.
+ANOVA test shows no significant difference in polarity scores among news organizations (p = 0.176).
+Biden:
+The mean compound polarity score ranges from -1.0000 to 0.9999.
+ANOVA test suggests a potential significant difference among news organizations (p = 0.0838).
+Climate:
+The mean compound polarity score ranges from -0.9994 to 1.0000.
+ANOVA test indicates a significant difference among news organizations (p < 0.001).
+Conservative:
+The mean compound polarity score ranges from -0.9998 to 1.0000.
+ANOVA test shows a significant difference among news organizations (p = 0.000975).
+Democrat:
+The mean compound polarity score ranges from -0.9995 to 1.0000.
+ANOVA test suggests a significant difference among news organizations (p = 0.0216).
+Economy:
+The mean compound polarity score ranges from -1.0000 to 1.0000.
+ANOVA test does not show a significant difference among news organizations (p = 0.109).
+Education:
+The mean compound polarity score ranges from -0.9998 to 1.0000.
+ANOVA test indicates a significant difference among news organizations (p = 0.00218).
+Gun:
+The mean compound polarity score ranges from -0.9998 to 0.9999.
+ANOVA test does not show a significant difference among news organizations (p = 0.26).
+Israel:
+The mean compound polarity score ranges from -0.9997 to 0.9999.
+ANOVA test does not show a significant difference among news organizations (p = 0.31).
+Liberal:
+The mean compound polarity score ranges from -1.0000 to 1.0000.
+ANOVA test does not show a significant difference among news organizations (p = 0.362).
+Republican:
+The mean compound polarity score ranges from -0.9995 to 0.9999.
+ANOVA test indicates a significant difference among news organizations (p = 0.00705).
+Trump:
+The mean compound polarity score ranges from -1.0000 to 0.9999.
+ANOVA test indicates a significant difference among news organizations (p = 0.00139).
+These results suggest that for some issues, there are significant differences in compound polarity scores among news organizations, while for others, there are no significant differences.
